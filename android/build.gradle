@@ -4,6 +4,9 @@ buildscript {
         minSdkVersion = 24
         compileSdkVersion = 37
         targetSdkVersion = 36
+        compileSdk = 37
+        targetSdk = 36
+        minSdk = 24
         ndkVersion = "27.1.12297006"
         kotlinVersion = "2.2.0"
     }
@@ -19,3 +22,23 @@ buildscript {
 }
 
 apply plugin: "com.facebook.react.rootproject"
+
+subprojects { subproject ->
+    def configureAndroid = {
+        if (subproject.hasProperty("android")) {
+            try {
+                subproject.android {
+                    compileSdk = rootProject.ext.compileSdk
+                }
+            } catch (Exception e) {}
+        }
+    }
+    if (subproject.state.executed) {
+        configureAndroid()
+    } else {
+        subproject.afterEvaluate {
+            configureAndroid()
+        }
+    }
+}
+

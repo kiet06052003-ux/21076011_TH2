@@ -25,30 +25,31 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
   };
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
-      </View>
-      <View style={styles.content}>
-        <Text style={styles.title} numberOfLines={2}>
-          {product.title}
-        </Text>
-        <Text style={styles.category} numberOfLines={1}>
-          {product.category}
-        </Text>
-        <View style={styles.footer}>
-          <Text style={styles.price}>{formattedPrice}</Text>
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={handleAddToCart}
-            activeOpacity={0.7}
-            accessibilityLabel="Thêm vào giỏ"
-          >
-            <Text style={styles.addButtonText}>+</Text>
-          </TouchableOpacity>
+    <View style={styles.card}>
+      <TouchableOpacity style={styles.cardBody} onPress={onPress} activeOpacity={0.8}>
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
         </View>
-      </View>
-    </TouchableOpacity>
+        <View style={styles.content}>
+          <Text style={styles.title} numberOfLines={2}>
+            {product.title}
+          </Text>
+          <Text style={styles.category} numberOfLines={1}>
+            {product.category}
+          </Text>
+          <Text style={styles.price}>{formattedPrice}</Text>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={handleAddToCart}
+        activeOpacity={0.7}
+        accessibilityLabel="Thêm vào giỏ"
+      >
+        <Text style={styles.addButtonText}>🛒 Thêm vào giỏ</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -61,7 +62,11 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: COLORS.border,
+    justifyContent: 'space-between',
     ...SHADOWS.card,
+  },
+  cardBody: {
+    flex: 1,
   },
   imageContainer: {
     width: '100%',
@@ -78,7 +83,6 @@ const styles = StyleSheet.create({
   content: {
     padding: 10,
     flex: 1,
-    justifyContent: 'space-between',
   },
   title: {
     fontSize: 13,
@@ -90,33 +94,24 @@ const styles = StyleSheet.create({
   category: {
     fontSize: 11,
     color: COLORS.textLight,
-    marginBottom: 8,
+    marginBottom: 6,
     textTransform: 'capitalize',
   },
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 4,
-  },
   price: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '700',
     color: COLORS.primary,
-    flex: 1,
   },
   addButton: {
     backgroundColor: COLORS.primary,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
   addButtonText: {
     color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: 'bold',
-    lineHeight: 20,
+    fontSize: 13,
+    fontWeight: '700',
   },
 });

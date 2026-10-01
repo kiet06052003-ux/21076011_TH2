@@ -7,6 +7,8 @@ import {
   ActivityIndicator,
   StyleSheet,
   SafeAreaView,
+  StatusBar,
+  Platform,
 } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useQuery } from '@tanstack/react-query';
@@ -122,6 +124,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: COLORS.background,
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 24) + 8 : 0,
   },
   header: {
     flexDirection: 'row',

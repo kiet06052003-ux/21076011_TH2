@@ -8,6 +8,8 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
+  StatusBar,
+  Platform,
 } from 'react-native';
 import { useCartStore } from '../stores/cartStore';
 import { STUDENT, ROOM_LABEL, VARIANT } from '../constants/student';
@@ -153,6 +155,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: COLORS.background,
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 24) + 8 : 0,
   },
   header: {
     flexDirection: 'row',

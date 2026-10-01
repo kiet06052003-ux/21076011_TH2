@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  StatusBar,
 } from 'react-native';
 import { useAuthStore } from '../stores/authStore';
 import { STUDENT, VARIANT } from '../constants/student';
@@ -79,6 +80,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: COLORS.background,
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 24) + 8 : 0,
   },
   container: {
     flex: 1,

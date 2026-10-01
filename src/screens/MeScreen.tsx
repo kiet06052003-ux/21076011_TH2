@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   Alert,
   Platform,
+  StatusBar,
 } from 'react-native';
 import { STUDENT, examStamp, BASE_SHIP_FEE, ROOM_LABEL, VARIANT } from '../constants/student';
 import { COLORS, SHADOWS } from '../constants/theme';
@@ -39,7 +40,7 @@ export function MeScreen() {
         return (
           <View style={[styles.statusBadge, { backgroundColor: '#DCFCE7' }]}>
             <Text style={[styles.statusBadgeText, { color: COLORS.success }]}>
-              ✓ Đã cấp quyền (Granted)
+              ✓ Đã cấp quyền
             </Text>
           </View>
         );
@@ -47,7 +48,7 @@ export function MeScreen() {
         return (
           <View style={[styles.statusBadge, { backgroundColor: '#FEF3C7' }]}>
             <Text style={[styles.statusBadgeText, { color: '#D97706' }]}>
-              ⚠️ Bị từ chối (Denied)
+              ⚠️ Bị từ chối
             </Text>
           </View>
         );
@@ -55,10 +56,12 @@ export function MeScreen() {
         return (
           <View style={[styles.statusBadge, { backgroundColor: '#FEE2E2' }]}>
             <Text style={[styles.statusBadgeText, { color: COLORS.error }]}>
-              🚫 Bị khóa (Blocked)
+              🚫 Bị khóa
             </Text>
           </View>
         );
+      case 'idle':
+      case 'loading':
       default:
         return (
           <View style={[styles.statusBadge, { backgroundColor: '#F3F4F6' }]}>
@@ -118,13 +121,13 @@ export function MeScreen() {
         {/* Location & Haversine Ship Fee Card */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>📍 Vị trí & Phí Ship (Công thức B)</Text>
+            <Text style={styles.cardTitle}>📍 Vị trí & Phí Ship</Text>
             {renderLocationStatusBadge()}
           </View>
 
           <View style={styles.locationDetails}>
             <Text style={styles.detailLabel}>
-              Cổng KTX cố định: ({CAMPUS_GATE.latitude}, {CAMPUS_GATE.longitude})
+              Cổng KTX cố định: {CAMPUS_GATE.latitude}, {CAMPUS_GATE.longitude}
             </Text>
 
             {location ? (
@@ -147,7 +150,7 @@ export function MeScreen() {
             <View style={styles.feeBox}>
               <Text style={styles.feeTitle}>Công thức tính phí ship B:</Text>
               <Text style={styles.feeFormula}>
-                BASE_SHIP_FEE ({BASE_SHIP_FEE.toLocaleString('vi-VN')}đ) + Math.round(km * 1500) + 2000đ
+                Phí cơ bản {BASE_SHIP_FEE.toLocaleString('vi-VN')}đ + Math.round km * 1500 + 2000đ
               </Text>
               <Text style={styles.calculatedFee}>
                 Tạm tính phí ship: {shipFee.toLocaleString('vi-VN')} đ
@@ -163,7 +166,7 @@ export function MeScreen() {
                 onPress={openDeviceSettings}
                 activeOpacity={0.8}
               >
-                <Text style={styles.actionButtonText}>⚙️ Mở Cài Đặt (Open Settings)</Text>
+                <Text style={styles.actionButtonText}>⚙️ Mở Cài Đặt</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
@@ -179,7 +182,7 @@ export function MeScreen() {
 
         {/* Variant Info Card */}
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>⚙️ Thông tin Biến thể (Variant)</Text>
+          <Text style={styles.cardTitle}>⚙️ Thông tin Biến thể</Text>
           <View style={styles.divider} />
           <Text style={styles.variantItem}>• Chữ số cuối MSSV: {STUDENT.mssv.slice(-1)}</Text>
           <Text style={styles.variantItem}>• Ô Đăng nhập: {VARIANT.authField.toUpperCase()}</Text>
@@ -205,6 +208,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: COLORS.background,
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 24) + 8 : 0,
   },
   header: {
     flexDirection: 'row',

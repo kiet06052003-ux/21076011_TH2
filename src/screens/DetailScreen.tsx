@@ -10,6 +10,8 @@ import {
   StyleSheet,
   SafeAreaView,
   Vibration,
+  StatusBar,
+  Platform,
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
@@ -131,6 +133,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: COLORS.background,
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight || 24) + 8 : 0,
   },
   topBar: {
     flexDirection: 'row',
