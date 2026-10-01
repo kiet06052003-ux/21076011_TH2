@@ -9,10 +9,10 @@ import {
   Alert,
   StyleSheet,
   SafeAreaView,
+  Vibration,
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
-import * as Haptics from 'expo-haptics';
 import { productApi } from '../services/productApi';
 import { STUDENT, PRICE_MULTIPLIER, VARIANT, STALE_TIME_MS } from '../constants/student';
 import { COLORS } from '../constants/theme';
@@ -37,9 +37,9 @@ export function DetailScreen() {
     if (!product) return;
 
     if (VARIANT.hapticOnAdd === 'impact') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      Vibration.vibrate(80);
     } else {
-      Haptics.selectionAsync();
+      Vibration.vibrate(40);
     }
 
     addItem(product);

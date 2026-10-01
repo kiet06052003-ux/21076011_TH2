@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Linking } from 'react-native';
-import * as Location from 'expo-location';
+import { Linking, PermissionsAndroid, Platform } from 'react-native';
 import { BASE_SHIP_FEE, VARIANT } from '../constants/student';
 
 // Cổng KTX cố định trong code
@@ -48,29 +47,40 @@ export function useCampusLocation() {
   const requestPermissionAndFetchLocation = useCallback(async () => {
     setStatus('loading');
     try {
-      const { status: permStatus, canAskAgain } = await Location.requestForegroundPermissionsAsync();
+      if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Quyền vị trí KTXGo',
+            message: 'KTXGo cần vị trí của bạn để tính phí giao hàng chính xác.',
+            buttonNeutral: 'Hỏi lại sau',
+            buttonNegative: 'Từ chối',
+            buttonPositive: 'Đồng ý',
+          }
+        );
 
-      if (permStatus === 'granted') {
-        setStatus('granted');
-        let currentLoc;
-        try {
-          currentLoc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-        } catch {
-          // Mock location if emulator doesn't return real position
-          currentLoc = {
-            coords: {
-              latitude: 10.8812,
-              longitude: 106.8085,
-            },
-          };
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          setStatus('granted');
+          const coords = { latitude: 10.8812, longitude: 106.8085 };
+          setLocation(coords);
+          const km = calculateHaversineDistance(
+            coords.latitude,
+            coords.longitude,
+            CAMPUS_GATE.latitude,
+            CAMPUS_GATE.longitude
+          );
+          setDistanceKm(km);
+          setShipFee(calculateShipFee(km));
+        } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+          setStatus('blocked');
+        } else {
+          setStatus('denied');
         }
-
-        const coords = {
-          latitude: currentLoc.coords.latitude,
-          longitude: currentLoc.coords.longitude,
-        };
+      } else {
+        // iOS or default
+        setStatus('granted');
+        const coords = { latitude: 10.8812, longitude: 106.8085 };
         setLocation(coords);
-
         const km = calculateHaversineDistance(
           coords.latitude,
           coords.longitude,
@@ -79,10 +89,6 @@ export function useCampusLocation() {
         );
         setDistanceKm(km);
         setShipFee(calculateShipFee(km));
-      } else if (!canAskAgain) {
-        setStatus('blocked');
-      } else {
-        setStatus('denied');
       }
     } catch {
       setStatus('denied');

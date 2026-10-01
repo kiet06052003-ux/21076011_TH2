@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Vibration } from 'react-native';
 import { Product } from '../services/productApi';
 import { PRICE_MULTIPLIER, VARIANT } from '../constants/student';
 import { COLORS, SHADOWS } from '../constants/theme';
@@ -18,9 +17,9 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
   const handleAddToCart = () => {
     // Haptic feedback according to VARIANT
     if (VARIANT.hapticOnAdd === 'impact') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      Vibration.vibrate(80);
     } else {
-      Haptics.selectionAsync();
+      Vibration.vibrate(40);
     }
     addItem(product);
   };
